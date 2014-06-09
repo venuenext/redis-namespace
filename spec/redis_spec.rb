@@ -116,7 +116,7 @@ describe "redis" do
 
   it 'should be able to use a namespace with setbit' do
     @namespaced.setbit('virgin_key', 1, 1)
-    @namespaced.exists('virgin_key').should be_true
+    @namespaced.exists('virgin_key').should eql true
     @namespaced.get('virgin_key').should eq(@namespaced.getrange('virgin_key',0,-1))
   end
 
@@ -152,9 +152,9 @@ describe "redis" do
 
   it "should be able to use a namespace with mapped_msetnx" do
     @namespaced.set('foo','1')
-    @namespaced.mapped_msetnx('foo'=>'1000', 'bar'=>'2000').should be_false
+    @namespaced.mapped_msetnx('foo'=>'1000', 'bar'=>'2000').should eql false
     @namespaced.mapped_mget('foo', 'bar').should eq({ 'foo' => '1', 'bar' => nil })
-    @namespaced.mapped_msetnx('bar'=>'2000', 'baz'=>'1000').should be_true
+    @namespaced.mapped_msetnx('bar'=>'2000', 'baz'=>'1000').should eql true
     @namespaced.mapped_mget('foo', 'bar').should eq({ 'foo' => '1', 'bar' => '2000' })
   end
 
@@ -173,8 +173,8 @@ describe "redis" do
     @namespaced.hmget('bar', 'a_number').should eq(['4'])
     @namespaced.hgetall('bar').should eq({'key' => 'value', 'key1' => 'value1', 'a_number' => '4'})
 
-    @namespaced.hsetnx('foonx','nx',10).should be_true
-    @namespaced.hsetnx('foonx','nx',12).should be_false
+    @namespaced.hsetnx('foonx','nx',10).should eql true
+    @namespaced.hsetnx('foonx','nx',12).should eql false
     @namespaced.hget('foonx','nx').should eq("10")
     @namespaced.hkeys('foonx').should eq(%w{ nx })
     @namespaced.hvals('foonx').should eq(%w{ 10 })
@@ -339,7 +339,7 @@ describe "redis" do
   end
 
   it "should respond to :warning=" do
-    @namespaced.respond_to?(:warning=).should == true
+    @namespaced.respond_to?(:warning=).should eql true
   end
 
   it "should raise an exception when an unknown command is passed" do
